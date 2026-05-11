@@ -1,0 +1,59 @@
+
+trigger:
+  branches:
+    include: [ main ]
+  paths:
+    include: [ frontend/ ]
+pool:
+  vmImage: ubuntu-latest
+variables:
+  IMAGE_NAME: rrm-frontend
+  SERVICE_PATH: frontend
+steps:
+- task: AzureCLI@2
+  displayName: 'ACR Login'
+  inputs:
+    azureSubscription: '$(AZURE_SUBSCRIPTION)'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az acr login -n $(ACR_NAME)
+
+# Optionally pull secrets from Key Vault (preferred)
+#- task: AzureKeyVault@2
+#  inputs:
+#    azureSubscription: '$(AZURE_SUBSCRIPTION)'
+#    KeyVaultName: '$(KEYVAULT_NAME)'
+#    SecretsFilter: '*'
+
+- task: Bash@3
+  displayName: 'Build image'
+  inputs:
+    targetType: inline
+    script: |
+      TAG=${ '$(Build.BuildId)' }
+      docker build -t $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$TAG $(SERVICE_PATH)
+      echo "##vso[task.setvariable variable=TAG]$TAG"
+
+- task: Bash@3
+  displayName: 'Push image'
+  inputs:
+    targetType: inline
+    script: |
+      docker push $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(TAG)
+
+- task: AzureCLI@2
+  displayName: 'Create/Update Container App'
+  inputs:
+    azureSubscription: '$(AZURE_SUBSCRIPTION)'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      # Create if not exists
+      az containerapp show -n rrm-frontend -g $(AZURE_RESOURCE_GROUP) >/dev/null 2>&1 || az containerapp create         -n rrm-frontend -g $(AZURE_RESOURCE_GROUP)         --environment $(CONTAINERAPPS_ENV)         --image $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(TAG)         --ingress external --target-port 80         --registry-server $(ACR_NAME).azurecr.io
+
+      # Update image
+      az containerapp update -n rrm-frontend -g $(AZURE_RESOURCE_GROUP)         --image $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(TAG)
+
+      # Example: set secret from KV later
+      # az containerapp secret set -n rrm-frontend -g $(AZURE_RESOURCE_GROUP) --secrets jwt-public=@<(az keyvault secret show --vault-name $(KEYVAULT_NAME) --name JwtPublicKey --query value -o tsv)
