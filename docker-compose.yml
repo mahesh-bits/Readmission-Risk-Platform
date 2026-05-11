@@ -1,0 +1,86 @@
+#
+#version: '3.9'
+#services:
+#  postgres:
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: postgres
+#    ports:
+#      - "5433:5432"
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#
+#  backend:
+#    build: ./backend
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      DB_URL: jdbc:postgresql://localhost:5433/postgres
+#      DB_USER: postgres
+#      DB_PASSWORD: postgres
+#      ML_BASE_URL: http://ml-service:8082
+#      JWT_PUBLIC_KEY_PATH: /app/keys/dev-public.pem
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - postgres
+#      - ml-service
+#
+#  ml-service:
+#    build: ./ml-service
+#    environment:
+#      MODEL_PATH: /app/model/gbm.joblib
+#    ports:
+#      - "8082:8082"
+#
+##  frontend:
+##    build: ./frontend
+##    environment:
+##      API_BASE_URL: http://localhost:8081
+##    ports:
+##      - "8080:80"
+##    depends_on:
+##      - backend
+#
+#volumes:
+#  pgdata:
+
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      ML_BASE_URL: http://ml-service:8082
+      JWT_PUBLIC_KEY_PATH: /app/keys/dev-public.pem
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - ml-service
+
+  ml-service:
+    build: ./ml-service
+    environment:
+      MODEL_PATH: /app/model/gbm.joblib
+    ports:
+      - "8082:8082"
+
+volumes:
+  pgdata:
