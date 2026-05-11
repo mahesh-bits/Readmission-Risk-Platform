@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json.schemastore.org/angular-cli",
+  "version": 1,
+  "projects": {
+    "rrm-ui": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "all"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+              "buildTarget": "rrm-ui:build"
+            },
+          "configurations": {
+              "production": {
+                "buildTarget": "rrm-ui:build:production"
+              }
+            }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "54b36cbf-ce4a-4b50-8dd0-449fe66d6d23"
+  }
+}

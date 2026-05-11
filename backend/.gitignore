@@ -1,0 +1,7 @@
+target/
+*.class
+
+# Private keys - NEVER commit
+src/main/resources/keys/dev-private.pem
+keys/dev-private.pem
+**/*-private.pem
