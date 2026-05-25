@@ -18,7 +18,7 @@ import { RiskLevelPipe } from '../../shared/pipes/risk-level.pipe';
         </thead>
         <tbody>
           <tr *ngFor="let p of patients">
-            <td>{{p.id}}</td><td>{{p.name}}</td><td>{{p.age}}</td><td>{{p.diagnosis}}</td>
+            <td>{{p.id}}</td><td>{{p.firstName}} {{p.lastName}}</td><td>{{p.age}}</td><td>{{p.diagnosis}}</td>
             <td>{{p.los}} days</td><td [class]="riskClass(p.riskScore)">{{p.riskScore | riskLevel}}</td>
             <td><a [routerLink]="['/patient', p.id]" class="link">View</a></td>
           </tr>

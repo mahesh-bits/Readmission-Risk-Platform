@@ -1,5 +1,6 @@
 
 {
   "apiBaseUrl": "http://localhost:8081",
+  "mlServiceBaseUrl": "http://localhost:8082",
   "appInsightsConnectionString": ""
 }

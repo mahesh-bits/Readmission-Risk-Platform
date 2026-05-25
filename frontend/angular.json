@@ -14,7 +14,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "tsconfig.json"
+            "tsConfig": "tsconfig.json",
+            "assets": ["src/favicon.ico", "src/assets"]
           },
           "configurations": {
             "production": {

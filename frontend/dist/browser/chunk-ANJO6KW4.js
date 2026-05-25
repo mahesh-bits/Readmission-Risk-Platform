@@ -1,0 +1,1 @@
+import{Ca as i}from"./chunk-XMENYGBB.js";var p=(()=>{class e{transform(r){return r>=.7?"High":r>=.4?"Medium":"Low"}static \u0275fac=function(t){return new(t||e)};static \u0275pipe=i({name:"riskLevel",type:e,pure:!0})}return e})();export{p as a};
