@@ -15,6 +15,7 @@ export class ApiService {
         base:   cfg.apiBaseUrl,
         mlBase: cfg.mlServiceBaseUrl || cfg.apiBaseUrl
       });
+      console.log(cfg.apiBaseUrl);
     });
   }
 
