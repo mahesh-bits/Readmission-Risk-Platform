@@ -1,6 +1,6 @@
 
 {
   "apiBaseUrl": "https://rrm-backend-haa4gahsezf5chgc.southindia-01.azurewebsites.net",
-  "mlServiceBaseUrl": "http://localhost:8082",
+  "mlServiceBaseUrl": "https://rrm-ml-service-fya6aaejd0bwc8ha.southindia-01.azurewebsites.net",
   "appInsightsConnectionString": ""
 }
