@@ -38,6 +38,9 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Copy server.js to dist
+        run: cp frontend/server.js frontend/dist/browser/server.js
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
