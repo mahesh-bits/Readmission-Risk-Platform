@@ -50,8 +50,13 @@ interface PatientRow {
               <td>{{ p.age ?? '—' }}</td>
               <td>{{ p.diagnosis ?? '—' }}</td>
               <td>{{ p.riskScore != null ? (p.riskScore | number:'1.2-2') : '—' }}</td>
-              <td [class]="riskClass(p.riskScore)">
-                {{ p.riskScore != null ? (p.riskScore | riskLevel) : (p.riskBucket ?? '—') }}
+              <td>
+                <span *ngIf="p.riskBucket || p.riskScore != null"
+                      class="bucket-badge"
+                      [class]="bucketClass(p.riskBucket, p.riskScore)">
+                  {{ p.riskBucket ?? (p.riskScore | riskLevel) }}
+                </span>
+                <span *ngIf="!p.riskBucket && p.riskScore == null">—</span>
               </td>
             </tr>
             <tr *ngIf="patients.length === 0">
@@ -80,6 +85,18 @@ interface PatientRow {
     .high   { color: #dc2626; font-weight: 600; }
     .medium { color: #d97706; font-weight: 600; }
     .low    { color: #16a34a; font-weight: 600; }
+
+    .bucket-badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .bucket-badge.high   { background: #fee2e2; color: #991b1b; }
+    .bucket-badge.medium { background: #fef3c7; color: #92400e; }
+    .bucket-badge.low    { background: #dcfce7; color: #166534; }
 
     .state-msg { padding: 24px; text-align: center; color: #64748b; font-size: .95rem; }
     .state-msg.error { color: #b91c1c; background: #fef2f2; border-radius: 8px; }
@@ -111,5 +128,11 @@ export class ProviderPatientsComponent implements OnInit {
   riskClass(score: number | null): string {
     if (score == null) return '';
     return score >= 0.7 ? 'high' : score >= 0.4 ? 'medium' : 'low';
+  }
+
+  bucketClass(bucket: string | null, score: number | null): string {
+    const b = (bucket ?? '').toLowerCase();
+    if (['high', 'medium', 'low'].includes(b)) return b;
+    return this.riskClass(score);
   }
 }

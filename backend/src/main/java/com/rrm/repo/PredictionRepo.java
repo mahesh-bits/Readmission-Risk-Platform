@@ -14,6 +14,9 @@ public interface PredictionRepo extends JpaRepository<Prediction, UUID> {
   @Query("SELECT p FROM Prediction p WHERE p.patientId = :patientId ORDER BY p.predictedAt DESC LIMIT 1")
   Optional<Prediction> findLatestByPatientId(@Param("patientId") UUID patientId);
 
+  @Query("SELECT p FROM Prediction p WHERE p.admissionId = :admissionId ORDER BY p.predictedAt DESC LIMIT 1")
+  Optional<Prediction> findLatestByAdmissionId(@Param("admissionId") UUID admissionId);
+
   @Query(value = """
       SELECT DISTINCT ON (patient_id) *
       FROM predictions

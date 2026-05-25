@@ -21,6 +21,7 @@ public class PatientDetailResponse {
   private String diagnosis;
   private BigDecimal riskScore;
   private String riskBucket;
+  private UUID admissionId;
 
   public static PatientDetailResponse from(Patient p, Admission a, Prediction pred) {
     PatientDetailResponse r = new PatientDetailResponse();
@@ -32,8 +33,9 @@ public class PatientDetailResponse {
     r.age       = p.getDob() != null ? Period.between(p.getDob(), LocalDate.now()).getYears() : null;
     r.sex       = p.getSex();
     if (a != null) {
-      r.los       = a.getLengthOfStay();
-      r.diagnosis = a.getPrimaryDx();
+      r.admissionId = a.getId();
+      r.los         = a.getLengthOfStay();
+      r.diagnosis   = a.getPrimaryDx();
     }
     if (pred != null) {
       r.riskScore  = pred.getRiskScore();
@@ -52,5 +54,6 @@ public class PatientDetailResponse {
   public Integer getLos()       { return los; }
   public String getDiagnosis()  { return diagnosis; }
   public BigDecimal getRiskScore()  { return riskScore; }
-  public String getRiskBucket() { return riskBucket; }
+  public String getRiskBucket()     { return riskBucket; }
+  public UUID getAdmissionId()      { return admissionId; }
 }

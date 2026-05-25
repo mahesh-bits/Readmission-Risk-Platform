@@ -50,6 +50,8 @@ export class ApiService {
 
   predict(payload: any)                    { return this.post('/api/inference/predict', payload); }
   predictMl(features: Record<string, number>) { return this.mlPost('/v1/predict', { features }); }
+  admissionPrediction(admissionId: string) { return this.get(`/api/admissions/${admissionId}/prediction`); }
+  patientPrediction(patientId: string)     { return this.get(`/api/patients/${patientId}/prediction`); }
 
   users()                                  { return this.get('/api/admin/users'); }
   createUser(body: any)                    { return this.post('/api/admin/users', body); }

@@ -37,4 +37,11 @@ public class Prediction {
   public BigDecimal getRiskScore()     { return riskScore; }
   public String getRiskBucket()        { return riskBucket; }
   public OffsetDateTime getPredictedAt(){ return predictedAt; }
+
+  public void setPatientId(UUID patientId)           { this.patientId = patientId; }
+  public void setAdmissionId(UUID admissionId)       { this.admissionId = admissionId; }
+  public void setModelVersion(String modelVersion)   { this.modelVersion = modelVersion; }
+  public void setRiskScore(BigDecimal riskScore)     { this.riskScore = riskScore; }
+  public void setRiskBucket(String riskBucket)       { this.riskBucket = riskBucket; }
+  public void setPredictedAt(OffsetDateTime predictedAt){ this.predictedAt = predictedAt; }
 }

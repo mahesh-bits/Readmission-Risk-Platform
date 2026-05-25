@@ -8,8 +8,11 @@ import com.rrm.repo.DocumentRepo;
 import com.rrm.repo.EncounterRepo;
 import com.rrm.repo.PatientRepo;
 import com.rrm.repo.PredictionRepo;
+import com.rrm.service.PredictionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,15 +27,17 @@ public class PatientController {
   private final PredictionRepo predictionRepo;
   private final EncounterRepo encounterRepo;
   private final DocumentRepo documentRepo;
+  private final PredictionService predictionService;
 
   public PatientController(PatientRepo repo, AdmissionRepo admissionRepo,
                            PredictionRepo predictionRepo, EncounterRepo encounterRepo,
-                           DocumentRepo documentRepo) {
+                           DocumentRepo documentRepo, PredictionService predictionService) {
     this.repo = repo;
     this.admissionRepo = admissionRepo;
     this.predictionRepo = predictionRepo;
     this.encounterRepo = encounterRepo;
     this.documentRepo = documentRepo;
+    this.predictionService = predictionService;
   }
 
   @GetMapping
@@ -88,5 +93,12 @@ public class PatientController {
   public List<DocumentResponse> documents(@PathVariable UUID id) {
     return documentRepo.findByPatientIdOrderByDesc(id)
         .stream().map(DocumentResponse::from).toList();
+  }
+
+  @GetMapping("/{id}/prediction")
+  public ResponseEntity<PredictionResponse> prediction(@PathVariable UUID id) {
+    var admission = admissionRepo.findLatestByPatientId(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No admission found for patient"));
+    return ResponseEntity.ok(predictionService.getOrCompute(admission));
   }
 }
